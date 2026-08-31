@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{c2b718a2-54f3-416a-86b8-fd5bf696be73}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{46e7e7c1-3408-4627-865c-59fc64fb44fd}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Embedded Assets">
+      <UniqueIdentifier>{9f1c2b3a-1234-4abc-9def-0123456789ab}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Casket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pumpkin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Skull.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureImage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Casket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLWnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pumpkin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skull.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="casket_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="face_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="fog_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="ghosts_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="interface_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="lighting_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="lighting_wav_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="pumpkin_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="witch_right_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="witch_left_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="skull_3ds_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="skull_tga_data.h">
+      <Filter>Embedded Assets</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

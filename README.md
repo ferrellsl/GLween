@@ -2,7 +2,8 @@ This application started out in life as a NeHe OpenGL tutorial contest entry for
 
 To build the screensaver, open the Visual Studio Solution file and select "Build".
 
-https://github.com/ferrellsl/GLween/blob/main/screenshot.png
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/e96e175c-efd9-4e0d-acf9-953653c4edb1" />
+
 
 
 

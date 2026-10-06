@@ -36,6 +36,9 @@
     <ClCompile Include="TextureImage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Volume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="WinMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextureImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Volume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="casket_tga_data.h">

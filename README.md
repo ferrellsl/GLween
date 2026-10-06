@@ -2,6 +2,8 @@ This application started out in life as a NeHe OpenGL tutorial contest entry for
 
 To build the screensaver, open the Visual Studio Solution file and select "Build".
 
+The screensaver's Settings dialog has a volume slider for the thunder. It is separate from the Windows volume, so the screensaver can be made quieter without turning anything else down.
+
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/e96e175c-efd9-4e0d-acf9-953653c4edb1" />
 
 

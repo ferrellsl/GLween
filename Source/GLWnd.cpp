@@ -5,12 +5,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "GLWnd.h"
-
-// PlaySound()/SND_* are declared here. The original code called PlaySound()
-// without ever including this -- VC6 apparently let that slide, but a
-// modern compiler (correctly) won't.
-#pragma comment(lib, "winmm.lib")
-#include <mmsystem.h>
+#include "Volume.h"						// PlayLightingSound() -- the thunder, at the volume set in the configuration dialog
 
 // Embedded texture data (see TextureImage::LoadTGAFromMemory() below).
 // Only Init() needs these, so they're included here rather than in the
@@ -28,7 +23,6 @@
 #include "witch_left_tga_data.h"
 #include "skull_3ds_data.h"
 #include "skull_tga_data.h"
-#include "lighting_wav_data.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -389,9 +383,9 @@ GLvoid GLWnd::RenderLighting(GLvoid)
 	{
 		if (m_playAudio)												// Only The Primary Monitor's Instance Plays The Sound
 		{
-			// SND_MEMORY: play directly from the embedded byte array
-			// instead of a Data\Lighting.wav file on disk.
-			PlaySound((LPCSTR)LIGHTING_WAV_DATA, NULL, SND_MEMORY|SND_ASYNC);
+			// The embedded sound (no Data\Lighting.wav file on disk),
+			// at the volume chosen in the configuration dialog.
+			PlayLightingSound();
 		}
 		glPushMatrix();													// Copy The Current Matrix
 		glLoadIdentity();												// Reset The Matrix

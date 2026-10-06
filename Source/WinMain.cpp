@@ -28,6 +28,12 @@
 #include <gl\glu.h>
 
 #include "GLWnd.h"
+#include "Volume.h"
+
+// The configuration dialog's volume slider is a common control.
+#include <commctrl.h>
+#pragma comment(lib, "comctl32.lib")
+#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 //////////////////////////////////////////////////////////////////////
 // Types & Globals
@@ -559,20 +565,123 @@ static int RunPreview(HWND hwndParent)
 //////////////////////////////////////////////////////////////////////
 // /c [<HWND>] -- Configuration Dialog
 //
-// There's nothing to configure -- the original demo has no adjustable
-// settings -- so this just satisfies the convention that /c shows
-// *something*.
+// One setting: the volume of the thunder, which is the screensaver's own
+// and separate from the Windows volume (see Volume.cpp).
+//
+// The project has no resource file, so the dialog template is built in
+// memory. A template is a DLGTEMPLATE, then one DLGITEMTEMPLATE per
+// control, each followed by its strings in UTF-16 and each starting on a
+// 4-byte boundary. Sizes and positions are in dialog units, which
+// Windows scales to the dialog's font and so to the display's DPI.
 //////////////////////////////////////////////////////////////////////
+
+enum { IDC_VOLUME = 100, IDC_VOLUME_TEXT, IDC_VOLUME_TEST };
+
+static WORD *PutString(WORD *p, const char *text)
+{
+	do
+		*p++ = (WORD)(unsigned char)*text;
+	while (*text++);
+	return p;
+}
+
+static WORD *AddControl(WORD *p, DLGTEMPLATE *dialog, const char *className, const char *text,
+						DWORD style, short x, short y, short cx, short cy, WORD id)
+{
+	p = (WORD *)(((ULONG_PTR)p + 3) & ~(ULONG_PTR)3);				// Each Control Starts On A 4-Byte Boundary
+	DLGITEMTEMPLATE *item = (DLGITEMTEMPLATE *)p;
+	item->style = style | WS_CHILD | WS_VISIBLE;
+	item->dwExtendedStyle = 0;
+	item->x = x;	item->y = y;
+	item->cx = cx;	item->cy = cy;
+	item->id = id;
+	p = (WORD *)(item + 1);
+	p = PutString(p, className);
+	p = PutString(p, text);
+	*p++ = 0;														// No Creation Data
+	dialog->cdit++;
+	return p;
+}
+
+static void ShowVolumeText(HWND hDlg)
+{
+	char text[16];
+	int percent = (int)SendDlgItemMessage(hDlg, IDC_VOLUME, TBM_GETPOS, 0, 0);
+	if (percent == 0)
+		lstrcpy(text, "Off");
+	else
+		wsprintf(text, "%d%%", percent);
+	SetDlgItemText(hDlg, IDC_VOLUME_TEXT, text);
+}
+
+static INT_PTR CALLBACK ConfigDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_INITDIALOG:
+		SendDlgItemMessage(hDlg, IDC_VOLUME, TBM_SETRANGE, FALSE, MAKELPARAM(0, 100));
+		SendDlgItemMessage(hDlg, IDC_VOLUME, TBM_SETTICFREQ, 10, 0);
+		SendDlgItemMessage(hDlg, IDC_VOLUME, TBM_SETPAGESIZE, 0, 10);
+		SendDlgItemMessage(hDlg, IDC_VOLUME, TBM_SETPOS, TRUE, LoadVolumePercent());
+		ShowVolumeText(hDlg);
+		return TRUE;
+
+	case WM_HSCROLL:												// The Slider Moved
+		ShowVolumeText(hDlg);
+		return TRUE;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDC_VOLUME_TEST:										// Hear It At The Slider's Volume
+			PlayLightingSound((int)SendDlgItemMessage(hDlg, IDC_VOLUME, TBM_GETPOS, 0, 0));
+			return TRUE;
+
+		case IDOK:
+			SaveVolumePercent((int)SendDlgItemMessage(hDlg, IDC_VOLUME, TBM_GETPOS, 0, 0));
+			EndDialog(hDlg, IDOK);
+			return TRUE;
+
+		case IDCANCEL:
+			EndDialog(hDlg, IDCANCEL);
+			return TRUE;
+		}
+		break;
+	}
+	return FALSE;
+}
 
 static int RunConfig(HWND hwndOwner)
 {
-	MessageBox(hwndOwner,
-		"GLween Screensaver\n\n"
-		"Original OpenGL demo by Jim Strong, written for the NeHe Productions\n"
-		"2000 Halloween contest (\"Xersist's Happy Halloween\").\n\n"
-		"No configurable options.",
-		"GLween Screensaver",
-		MB_OK | MB_ICONINFORMATION);
+	INITCOMMONCONTROLSEX controls = { sizeof(controls), ICC_BAR_CLASSES };
+	InitCommonControlsEx(&controls);								// Registers The Slider's Window Class
+
+	static DWORD buffer[512];										// DWORDs, So It Starts On A 4-Byte Boundary
+	ZeroMemory(buffer, sizeof(buffer));
+	DLGTEMPLATE *dialog = (DLGTEMPLATE *)buffer;
+	dialog->style = DS_MODALFRAME | DS_CENTER | DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU;
+	dialog->cx = 214;
+	dialog->cy = 113;
+	WORD *p = (WORD *)(dialog + 1);
+	*p++ = 0;														// No Menu
+	*p++ = 0;														// The Standard Dialog Class
+	p = PutString(p, "GLween Screensaver");
+	*p++ = 9;														// Font Size, Then Its Name
+	p = PutString(p, "Segoe UI");
+
+	p = AddControl(p, dialog, "STATIC",
+		"Original OpenGL demo by Jim Strong, written for the NeHe Productions "
+		"2000 Halloween contest (\"Xersist's Happy Halloween\").",
+		SS_LEFT, 7, 7, 200, 27, (WORD)-1);
+	p = AddControl(p, dialog, "STATIC", "Thunder &volume:", SS_LEFT, 7, 43, 120, 9, (WORD)-1);
+	p = AddControl(p, dialog, TRACKBAR_CLASSA, "", TBS_HORZ | TBS_AUTOTICKS | WS_TABSTOP, 4, 54, 172, 18, IDC_VOLUME);
+	p = AddControl(p, dialog, "STATIC", "", SS_LEFT, 180, 57, 27, 9, IDC_VOLUME_TEXT);
+	p = AddControl(p, dialog, "STATIC", "This is separate from the Windows volume.", SS_LEFT, 7, 75, 200, 9, (WORD)-1);
+	p = AddControl(p, dialog, "BUTTON", "&Test", BS_PUSHBUTTON | WS_TABSTOP, 7, 92, 50, 14, IDC_VOLUME_TEST);
+	p = AddControl(p, dialog, "BUTTON", "OK", BS_DEFPUSHBUTTON | WS_TABSTOP, 100, 92, 50, 14, IDOK);
+	p = AddControl(p, dialog, "BUTTON", "Cancel", BS_PUSHBUTTON | WS_TABSTOP, 157, 92, 50, 14, IDCANCEL);
+
+	DialogBoxIndirectParam(g_hInstance, dialog, hwndOwner, ConfigDlgProc, 0);
 	return 0;
 }
 
